@@ -17,8 +17,6 @@ const notificationSchema = new mongoose.Schema(
                 'task_assigned',
                 'task_completed',
                 'task_commented',
-                'task_due_soon',
-                'task_overdue',
                 'project_invited',
                 'project_updated',
                 'mention',

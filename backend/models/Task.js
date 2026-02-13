@@ -105,16 +105,6 @@ const taskSchema = new mongoose.Schema(
             type: Boolean,
             default: false,
         },
-        remindersSent: [{
-            type: {
-                type: String,
-                enum: ['24h', '3h', '1h', 'overdue'],
-            },
-            sentAt: {
-                type: Date,
-                default: Date.now,
-            },
-        }],
     },
     {
         timestamps: true,

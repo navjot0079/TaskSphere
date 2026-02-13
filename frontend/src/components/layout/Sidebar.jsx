@@ -100,7 +100,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                             <CheckSquare className="w-5 h-5 text-white" />
                         </div>
                         <span className="text-xl font-bold text-gray-800 dark:text-white">
-                            TaskManager
+                            TaskSphere
                         </span>
                     </Link>
                     <button

@@ -9,7 +9,6 @@ import { Server } from 'socket.io';
 import { createServer } from 'http';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import cron from 'node-cron';
 
 // Config
 dotenv.config();
@@ -30,9 +29,6 @@ import adminRoutes from './routes/admin.js';
 
 // Middleware
 import { errorHandler, notFound } from './middleware/error.js';
-
-// Utils
-import { checkDeadlines } from './utils/deadlineReminder.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -371,29 +367,6 @@ httpServer.listen(PORT, () => {
 ║                                           ║
 ╚═══════════════════════════════════════════╝
   `);
-
-    // Start deadline reminder cron job
-    // Runs every 15 minutes to check for upcoming deadlines
-    cron.schedule('*/15 * * * *', async () => {
-        console.log('🔔 Running deadline check...');
-        try {
-            await checkDeadlines(io);
-        } catch (error) {
-            console.error('Error in deadline cron job:', error);
-        }
-    });
-
-    console.log('⏰ Deadline reminder cron job started (runs every 15 minutes)');
-
-    // Run initial check on startup
-    setTimeout(async () => {
-        console.log('🔔 Running initial deadline check...');
-        try {
-            await checkDeadlines(io);
-        } catch (error) {
-            console.error('Error in initial deadline check:', error);
-        }
-    }, 5000); // Wait 5 seconds after startup
 });
 
 // Handle unhandled promise rejections
