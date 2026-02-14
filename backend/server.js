@@ -40,6 +40,14 @@ const httpServer = createServer(app);
 // Connect to database
 connectDB();
 
+app.get("/", (req, res) => {
+  res.status(200).json({
+    status: "success",
+    message: "API is running successfully 🚀"
+  });
+});
+
+
 // Security middleware
 app.use(
     helmet({
