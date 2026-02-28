@@ -1,0 +1,26 @@
+# Copy these environment variables to Render Dashboard
+# Go to: https://dashboard.render.com → Your Service → Environment
+
+NODE_ENV=production
+PORT=5000
+MONGODB_URI=mongodb+srv://navjot:navjot@task1.4dk882d.mongodb.net/TaskManager?retryWrites=true&w=majority
+JWT_SECRET=IuJg4NFYmGrV5DDjy2Z0GfIkrUnetsNSF4bRTKAtyX4=
+JWT_REFRESH_SECRET=AdzNOq7GbCnZPIzyPgNvmHblIunIbZx9r78ZPqcm72U=
+JWT_EXPIRES_IN=15m
+JWT_REFRESH_EXPIRES_IN=7d
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=navjotsinghsaini718@gmail.com
+EMAIL_PASSWORD=uikt lmay uimm zzfp
+EMAIL_FROM=TaskManager <noreply@taskmanager.com>
+ADMIN_EMAIL=navjotsinghsaini718@gmail.com
+FRONTEND_URL=http://localhost:5173
+MAX_FILE_SIZE=10485760
+UPLOAD_PATH=./uploads
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX_REQUESTS=100
+
+# IMPORTANT NOTES:
+# 1. FRONTEND_URL is set to localhost for testing
+# 2. When you deploy frontend to Vercel, change FRONTEND_URL to your Vercel URL
+# 3. After adding variables, Render will automatically redeploy (~2-5 min)

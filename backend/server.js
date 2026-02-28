@@ -37,13 +37,51 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const httpServer = createServer(app);
 
+// CORS - MUST BE FIRST middleware (before any routes)
+// Allow multiple origins for development and production
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'http://localhost:3000',
+    'https://tasksphere-frontend-j418.onrender.com', // Render frontend
+    process.env.FRONTEND_URL, // Additional production URL
+].filter(Boolean); // Remove undefined values
+
+const corsOptions = {
+    origin: function (origin, callback) {
+        // Allow requests with no origin (mobile apps, Postman, curl, etc.)
+        if (!origin) return callback(null, true);
+        
+        if (allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            console.log('CORS blocked origin:', origin);
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+    exposedHeaders: ['Content-Range', 'X-Content-Range'],
+    maxAge: 600, // Cache preflight for 10 minutes
+};
+
+// Apply CORS middleware FIRST
+app.use(cors(corsOptions));
+
+// Handle preflight OPTIONS requests explicitly
+app.options('*', cors(corsOptions));
+
 // Connect to database
 connectDB();
 
+// Root route (now AFTER CORS)
 app.get("/", (req, res) => {
     res.status(200).json({
         status: "success",
-        message: "API is running successfully 🚀"
+        message: "API is running successfully 🚀",
+        cors: "enabled",
+        allowedOrigins: allowedOrigins,
     });
 });
 
@@ -64,30 +102,6 @@ app.use(
     })
 );
 
-
-// CORS - Allow multiple origins for development and production
-const allowedOrigins = [
-    'http://localhost:5173',
-    'http://localhost:5174',
-    'http://localhost:3000',
-    process.env.FRONTEND_URL, // Production Vercel URL
-].filter(Boolean); // Remove undefined values
-
-app.use(
-    cors({
-        origin: function (origin, callback) {
-            // Allow requests with no origin (mobile apps, Postman, etc.)
-            if (!origin) return callback(null, true);
-
-            if (allowedOrigins.includes(origin)) {
-                callback(null, true);
-            } else {
-                callback(new Error('Not allowed by CORS'));
-            }
-        },
-        credentials: true,
-    })
-);
 
 // Rate limiting
 const limiter = rateLimit({
