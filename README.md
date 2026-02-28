@@ -230,21 +230,63 @@ npm test
 
 ## 🚀 Deployment
 
-### Backend Deployment (Example: Heroku)
+### 📦 Production Deployment
+
+This application is **PRODUCTION-READY** with configurations for:
+- ✅ **Frontend:** Vercel (React + Vite)
+- ✅ **Backend:** Railway/Render (Node.js + Express + WebSocket)
+- ✅ **Database:** MongoDB Atlas (Cloud)
+
+### Quick Deploy
+
+**Option 1: Automated Deployment**
 ```bash
+# Frontend to Vercel
+cd frontend
+npm install
+vercel --prod
+
+# Backend to Railway
 cd backend
-heroku create your-app-name
-git push heroku main
+npm install
+railway login
+railway init
+railway up
 ```
 
-### Frontend Deployment (Example: Vercel)
-```bash
-cd frontend
-vercel deploy
-```
+**Option 2: Manual Configuration**
+See [📖 DEPLOYMENT.md](./DEPLOYMENT.md) for complete step-by-step guide including:
+- Environment variable setup
+- Security best practices
+- Testing procedures
+- Troubleshooting guide
+
+### Pre-Deployment Checklist
+- [ ] Update JWT secrets (use `openssl rand -base64 32`)
+- [ ] Configure production MongoDB URI
+- [ ] Set up email credentials (Gmail App Password)
+- [ ] Update CORS origins
+- [ ] Test builds locally
+- [ ] Review [FIXES.md](./FIXES.md) for known issues
+
+### Deployment Scripts
+See [DEPLOY-SCRIPTS.md](./DEPLOY-SCRIPTS.md) for:
+- Quick deploy commands
+- Health check scripts
+- Rollback procedures
+- CI/CD configuration
+
+### Important Notes
+⚠️ **WebSocket Requirement:** Backend MUST be deployed on a platform that supports persistent WebSocket connections (Railway, Render, Heroku). Vercel serverless functions do NOT support Socket.IO.
 
 ### Environment Variables
-Update all `.env` files with production values before deployment.
+**Critical production environment variables:**
+- `MONGODB_URI` - Production database
+- `JWT_SECRET` - Secure token secret
+- `FRONTEND_URL` - Your Vercel URL
+- `EMAIL_PASSWORD` - App-specific password
+
+See `.env.example` files in `frontend/` and `backend/` directories.
 
 ## 📝 License
 

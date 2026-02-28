@@ -1,0 +1,10 @@
+# Railway Deployment Configuration
+# Documentation: https: //docs.railway.app/deploy/deployments
+
+# This file is optional but helps Railway understand your project
+
+# Build command (optional - Railway auto-detects)
+# Railway will run: npm install
+
+# Start command (optional - Railway auto-detects from package.json)
+# Railway will run: npm start
