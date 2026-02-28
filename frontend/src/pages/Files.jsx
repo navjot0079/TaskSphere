@@ -22,6 +22,9 @@ const Files = () => {
     const [imageUrls, setImageUrls] = useState({}); // Store blob URLs for images
     const fileInputRef = useRef(null);
 
+    // Get API base URL from environment
+    const API_BASE_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'https://tasksphere-backend-bjqe.onrender.com';
+
     useEffect(() => {
         fetchFiles();
 
@@ -53,7 +56,7 @@ const Files = () => {
     const loadImagePreview = async (fileId) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:5000/api/files/${fileId}/view`, {
+            const response = await fetch(`${API_BASE_URL}/api/files/${fileId}/view`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -114,7 +117,7 @@ const Files = () => {
     const handleDownload = async (file) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:5000/api/files/${file._id}/download`, {
+            const response = await fetch(`${API_BASE_URL}/api/files/${file._id}/download`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -150,8 +153,7 @@ const Files = () => {
     };
 
     const handleCopyLink = (file) => {
-        const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-        const link = `${baseUrl}/api/files/${file._id}/view`;
+        const link = `${API_BASE_URL}/api/files/${file._id}/view`;
         navigator.clipboard.writeText(link);
         toast.success('Link copied to clipboard (requires authentication)');
     };

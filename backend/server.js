@@ -41,10 +41,10 @@ const httpServer = createServer(app);
 connectDB();
 
 app.get("/", (req, res) => {
-  res.status(200).json({
-    status: "success",
-    message: "API is running successfully 🚀"
-  });
+    res.status(200).json({
+        status: "success",
+        message: "API is running successfully 🚀"
+    });
 });
 
 
@@ -65,10 +65,26 @@ app.use(
 );
 
 
-// CORS
+// CORS - Allow multiple origins for development and production
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'http://localhost:3000',
+    process.env.FRONTEND_URL, // Production Vercel URL
+].filter(Boolean); // Remove undefined values
+
 app.use(
     cors({
-        origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+        origin: function (origin, callback) {
+            // Allow requests with no origin (mobile apps, Postman, etc.)
+            if (!origin) return callback(null, true);
+
+            if (allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error('Not allowed by CORS'));
+            }
+        },
         credentials: true,
     })
 );
