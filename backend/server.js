@@ -36,64 +36,45 @@ const __dirname = path.dirname(__filename);
 // Initialize app
 const app = express();
 const httpServer = createServer(app);
-
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
   "http://localhost:3000",
   "https://tasksphere-frontend-j418.onrender.com"
 ];
-/* 🔥 FORCE CORS HEADERS ON EVERY REQUEST — MUST BE FIRST */
+
+/* 🔥 SINGLE, BULLETPROOF CORS MIDDLEWARE */
 app.use((req, res, next) => {
   const origin = req.headers.origin;
 
-
   if (allowedOrigins.includes(origin)) {
-    res.header("Access-Control-Allow-Origin", origin);
+    res.setHeader("Access-Control-Allow-Origin", origin);
   }
 
-  res.header(
+  res.setHeader(
     "Access-Control-Allow-Methods",
     "GET, POST, PUT, DELETE, PATCH, OPTIONS"
   );
-  res.header(
+  res.setHeader(
     "Access-Control-Allow-Headers",
     "Content-Type, Authorization, X-Requested-With, Accept"
   );
-  res.header("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
 
-  // 🚨 CRITICAL: respond to preflight immediately
+  // ✅ ALWAYS respond to preflight
   if (req.method === "OPTIONS") {
-    return res.sendStatus(204);
+    return res.sendStatus(200);
   }
 
   next();
 });
 
-const corsOptions = {
-    origin: function (origin, callback) {
-        // Allow requests with no origin (mobile apps, Postman, curl, etc.)
-        if (!origin) return callback(null, true);
 
-        if (allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            console.log('CORS blocked origin:', origin);
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
-    exposedHeaders: ['Content-Range', 'X-Content-Range'],
-    maxAge: 600, // Cache preflight for 10 minutes
-};
+// // Apply CORS middleware FIRST
+// app.use(cors(corsOptions));
 
-// Apply CORS middleware FIRST
-app.use(cors(corsOptions));
-
-// Handle preflight OPTIONS requests explicitly
-app.options('*', cors(corsOptions));
+// // Handle preflight OPTIONS requests explicitly
+// app.options('*', cors(corsOptions));
 
 // Connect to database
 connectDB();
