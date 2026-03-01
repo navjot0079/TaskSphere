@@ -394,21 +394,10 @@ io.on('connection', (socket) => {
 app.set('io', io);
 
 // Start server
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
 
 httpServer.listen(PORT, () => {
-    console.log(`
-╔═══════════════════════════════════════════╗
-║                                           ║
-║    Task Manager API Server                ║
-║                                           ║
-║   Environment: ${process.env.NODE_ENV || 'development'}                ║
-║   Port: ${PORT}                           ║
-║   Database: Connected                     ║
-║   WebSocket: Active                       ║
-║                                           ║
-╚═══════════════════════════════════════════╝
-  `);
+  console.log(`Server running on port ${PORT}`);
 });
 
 // Handle unhandled promise rejections
