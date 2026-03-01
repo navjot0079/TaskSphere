@@ -37,16 +37,16 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const httpServer = createServer(app);
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "http://localhost:3000",
+  "https://tasksphere-frontend-j418.onrender.com"
+];
 /* 🔥 FORCE CORS HEADERS ON EVERY REQUEST — MUST BE FIRST */
 app.use((req, res, next) => {
   const origin = req.headers.origin;
 
-  const allowedOrigins = [
-    "http://localhost:5173",
-    "http://localhost:5174",
-    "http://localhost:3000",
-    "https://tasksphere-frontend-j418.onrender.com"
-  ];
 
   if (allowedOrigins.includes(origin)) {
     res.header("Access-Control-Allow-Origin", origin);
