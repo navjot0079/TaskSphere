@@ -37,21 +37,44 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const httpServer = createServer(app);
 
-// CORS - MUST BE FIRST middleware (before any routes)
-// Allow multiple origins for development and production
-const allowedOrigins = [
-    'http://localhost:5173',
-    'http://localhost:5174',
-    'http://localhost:3000',
-    'https://tasksphere-frontend-j418.onrender.com', // Render frontend
-    process.env.FRONTEND_URL, // Additional production URL
-].filter(Boolean); // Remove undefined values
+/* 🔥 FORCE CORS HEADERS ON EVERY REQUEST — MUST BE FIRST */
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+
+  const allowedOrigins = [
+    "http://localhost:5173",
+    "http://localhost:5174",
+    "http://localhost:3000",
+    "https://tasksphere-frontend-j418.onrender.com"
+  ];
+
+  if (allowedOrigins.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin);
+  }
+
+  res.header(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+  );
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization, X-Requested-With, Accept"
+  );
+  res.header("Access-Control-Allow-Credentials", "true");
+
+  // 🚨 CRITICAL: respond to preflight immediately
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
+
+  next();
+});
 
 const corsOptions = {
     origin: function (origin, callback) {
         // Allow requests with no origin (mobile apps, Postman, curl, etc.)
         if (!origin) return callback(null, true);
-        
+
         if (allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
